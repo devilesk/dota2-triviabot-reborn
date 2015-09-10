@@ -1,0 +1,21 @@
+{
+  "name": "node-dota2reborn",
+  "version": "0.0.0",
+  "description": "A node-steam plugin for Dota 2 Reborn.",
+  "author": "devilesk",
+  "keywords": [
+  "dota",
+  "dota2",
+  "steam",
+  "valve"
+],
+  "dependencies": {
+    "protobufjs": "*",
+    "steam": "*",
+    "bytebuffer": "*",
+    "bignumber.js": "*"
+  },
+  "private": true,  
+  "license": "MIT"
+}
+  

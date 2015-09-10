@@ -1,0 +1,14 @@
+{
+    "test_mode": false,
+    "steam_name": "a bot",
+    "steam_user": "steam account name",
+    "steam_pass": "steam password",
+    "steam_guard_code": "",
+    "dotaCommandProcessDelay": 1000,
+    "maxUserCommandQueueSize": 10,
+    "userCommandProcessDelay": 5000,
+    "userCommandLogClearDelay": 60000,
+    "ownerId": "99999999",
+    "ownerId64": "99991111999911111",
+    "cmdChar": "!"
+}

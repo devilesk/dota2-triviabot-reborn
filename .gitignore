@@ -1,0 +1,6 @@
+node-dota2/bot/data/all
+node-dota2/bot/data/wordlist
+node-dota2/bot/servers
+node-dota2/bot/config.json
+node-dota2/bot/triviaconfig.json
+node-dota2/bot/triviaconfig2.json

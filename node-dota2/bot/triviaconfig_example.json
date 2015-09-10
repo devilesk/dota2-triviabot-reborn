@@ -1,0 +1,29 @@
+{
+    "channel": "a dota channel",
+    "autoStart": true,
+    "maxHints": 6,
+    "hintInterval": 10000,
+    "unansweredThreshold": 50,
+    "startMessage": "Trivia started.",
+    "periodicMessage": "Trivia is running.",
+    "periodicMessageCount": 5,
+    "keepAlivePrompt": "Bot suspects that its questions aren't being seen and will restart in 30 seconds. Say !cancel if you can see this message to prevent restart.",
+    "keepAliveCancel": "Restart canceled. Trivia resuming.",
+    "keepAliveResponseWait": 30000,
+    "maxPointsPerAnswer": 5,
+    "nextQuestionDelay": 5000,
+    "questionSources": [
+        {
+            "path": "./data/wordlist",
+            "questionModifier": "scramble",
+            "weight": 0.2
+        },
+        {
+            "path": "./data/all",
+            "questionModifier": null,
+            "weight": 0.8
+        }
+    ],
+    "databaseAddress": "mongodb://localhost/",
+    "databaseName": "statsDb"
+}

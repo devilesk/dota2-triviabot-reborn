@@ -20,3 +20,7 @@ The extra step is to just run `npm install` in node-dota2/node_modules/steam dir
 I actually had to use `npm install --unsafe-perm` although I think that is just something to do with my npm installation.
 
 Run `npm install` in node-dota2/bot directory
+
+## Configuration and running the bot
+
+See README in node-dota2/bot directory.

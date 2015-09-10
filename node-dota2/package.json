@@ -10,10 +10,10 @@
   "valve"
 ],
   "dependencies": {
-    "protobufjs": "*",
-    "steam": "*",
-    "bytebuffer": "*",
-    "bignumber.js": "*"
+    "protobufjs": "4.0.0",
+    "steam": "git://github.com/seishun/node-steam.git#d92b12e0aa63cde3fa5433a93eafefb752f875cf",
+    "bytebuffer": "4.0.0",
+    "bignumber.js": "2.0.7"
   },
   "private": true,  
   "license": "MIT"

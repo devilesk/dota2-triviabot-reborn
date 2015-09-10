@@ -12,11 +12,11 @@ I was going to clean things up and submit a pull request, but it seems like [bet
 
 ## Installation
 
-Run `npm-install` in node-dota2 directory
+Run `npm install` in node-dota2 directory
 
 Since this project pulls node-steam from git as a dependency, there's an extra installing from git instruction for node-steam that should be followed.
 [See node-steam README Installation section](https://github.com/seishun/node-steam/tree/d92b12e0aa63cde3fa5433a93eafefb752f875cf)
-The extra step is to just run `npm-install` in node-dota2/node_modules/steam directory.
+The extra step is to just run `npm install` in node-dota2/node_modules/steam directory.
 I actually had to use `npm install --unsafe-perm` although I think that is just something to do with my npm installation.
 
-Run `npm-install` in node-dota2/bot directory
+Run `npm install` in node-dota2/bot directory

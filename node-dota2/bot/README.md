@@ -1,6 +1,6 @@
-# Configuration
+## Configuration
 
-## core bot config
+### core bot config
 
 config_example.json is the bot's basic settings file where you'll need to specify the login info the bot will use. By default index.js will look for a file named config.json, so rename or copy config_example.json.
 
@@ -20,11 +20,11 @@ By default index.js specifies triviaconfig.json as the config file for the trivi
 
 **TODO:** description of options.
 
-## index.js
+### index.js
 
 This is the main application file that initializes the bot, adds the plugins the bot will use, and starts the bot.
 
-# Plugins
+## Plugins
 
 **under construction**
 
@@ -50,3 +50,13 @@ Basically plugins are structured to handle events emitted from the bot.
 **TODO:** rewrite this
 
 Everything related to trivia is in the plugins/trivia directory.
+
+## Running the bot
+
+First create the config.json file.
+Then check index.js to see that it will initialize the bot with the plugins you want and that the individual plugin configs are correct.
+Make sure sentry file exists. If it doesn't, just create a blank file named 'sentry'.
+Run `nodejs index.js` to start the bot.
+The first time the bot runs it should fail with error code 63 and send a steam guard code to the email of the steam account the bot is using.
+Check your email for the steam guard code and update config.json with it.
+Run the bot again and it should work.

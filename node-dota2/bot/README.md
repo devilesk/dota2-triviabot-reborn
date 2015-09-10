@@ -31,5 +31,22 @@ This is the main application file that initializes the bot, adds the plugins the
 For this new version I tried to make the bot more easily extensible and separated bot functionality using a plugin design.
 The core bot logic is in bot.js.
 It loads the plugins the bot is configured to use. The implementation for specific commands is in plugins.
+It contains the a queue that holds actions requested by all the plugins.
+The queue is processed by an interval timer on a delay.
+
+For example, when the trivia plugin generates a message for the bot to say in chat, it will call the bot's sendMessage function in bot.js.
+The sendMessage function doesn't send the message immediately, instead it adds it to the dota command queue which is processed by an interval loop in bot.js.
+This prevents the bot from spamming too many messages too quickly.
+Other actions like joining and leaving channels are also queued.
+
+There is also a separate user command queue to separate user generated bot actions from plugin generated bot actions.
+This is so the bot can have tighter control over how often user commands are processed.
+User commands can be throttled more strictly without affecting the processing of plugin actions.
+
+Bot.js also handles chat messages by listening to node-dota2's chatMessage event. 
+Bot.js then emits its own chatMessage event which plugins are registered to listen to if they want to handle chat messages.
+Basically plugins are structured to handle events emitted from the bot.
+
+**TODO:** rewrite this
 
 Everything related to trivia is in the plugins/trivia directory.

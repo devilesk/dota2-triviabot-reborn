@@ -13,7 +13,7 @@ var sentry = null,
     steamUser = new Steam.SteamUser(steamClient),
     steamFriends = new Steam.SteamFriends(steamClient),
     steamGameCoordinator = new Steam.SteamGameCoordinator(steamClient, 570),
-    Dota2 = new dota2.Dota2Client(steamClient, steamUser, steamGameCoordinator, true),
+    Dota2 = new dota2.Dota2Client(steamClient, true, true),
     MakeSha = require("./common").MakeSha,
     tokenize = require("./common").tokenize,
     sentrylocation = 'sentry';
@@ -76,6 +76,7 @@ Dota2Bot.prototype.start = function () {
     
     this.steamClient.connect();
     this.steamClient.on('connected', function () {
+        console.log('steamClient connected', logOnDetails);
         steamUser.logOn(logOnDetails);
     });
     steamUser.on('updateMachineAuth', function (response, callback){
@@ -87,6 +88,7 @@ Dota2Bot.prototype.start = function () {
 
 /* Steam logic */
 Dota2Bot.prototype.onSteamLogOn = function onSteamLogOn (logonResp){
+    console.log('onSteamLogOn');
     if (logonResp.eresult == Steam.EResult.OK) {
         console.log('Logged in.');
         

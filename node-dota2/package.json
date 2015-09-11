@@ -1,21 +1,24 @@
 {
-  "name": "node-dota2reborn",
-  "version": "0.0.0",
-  "description": "A node-steam plugin for Dota 2 Reborn.",
-  "author": "devilesk",
-  "keywords": [
-  "dota",
-  "dota2",
-  "steam",
-  "valve"
-],
+  "name": "dota2",
+  "version": "0.7.1",
   "dependencies": {
-    "protobufjs": "4.0.0",
-    "steam": "1.1.0",
-    "bytebuffer": "4.0.0",
-    "bignumber.js": "2.0.7"
+    "bignumber.js": "2.0.7",
+    "deferred": "^0.7.2",
+    "merge": "^1.2.0",
+    "protobufjs": "^4.0.0",
+    "steam": "^1.0.0"
   },
-  "private": true,  
+  "readmeFilename": "README.md",
+  "description": "A node-steam plugin for Dota 2.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/RJacksonm1/node-dota2.git"
+  },
+  "keywords": [
+    "steam",
+    "valve",
+    "dota"
+  ],
   "license": "MIT"
 }
-  

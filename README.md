@@ -6,9 +6,9 @@ Crazy-Duck's fork of node-dota2 is currently used as a dependency, which updates
 
 ## Installation
 
-Run `npm install`
+Run `npm install` in bot directory.
 
-Create a blank file named 'sentry'
+Create a blank file named 'sentry' in bot directory.
 
 ## Configuration
 

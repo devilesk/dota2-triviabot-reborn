@@ -2,6 +2,8 @@
 
 This is an updated dota 2 trivia bot based on a [node-dota2](https://github.com/RJacksonm1/node-dota2) and [node-steam](https://github.com/seishun/node-steam).
 
+This branch gets rid of my modified node-dota2 and instead uses Crazy-Duck's fork as a dependency, which updates node-dota2 to use node-steam 1.1.0.
+
 ## Installation
 
 Run `npm install`

@@ -2,14 +2,30 @@ var fs = require("fs");
 
 global.config = JSON.parse(fs.readFileSync('./config.json'));
 
-var test_mode = config.test_mode,
+var sentry = null,
+    sentryhash,
+    test_mode = config.test_mode,
     EventEmitter = require('events').EventEmitter
-    steam = test_mode ? require('./test/stubs/SteamClient') : require("steam"),
+    Steam = test_mode ? require('./test/stubs/SteamClient') : require("steam"),
     util = require("util"),
     dota2 = test_mode ? require('./test/stubs/Dota2Client') : require("../"),
-    SteamClient = new steam.SteamClient(),
-    Dota2 = new dota2.Dota2Client(SteamClient, true)
-    tokenize = require("./common").tokenize;
+    steamClient = new Steam.SteamClient(),
+    steamUser = new Steam.SteamUser(steamClient),
+    steamFriends = new Steam.SteamFriends(steamClient),
+    steamGameCoordinator = new Steam.SteamGameCoordinator(steamClient, 570),
+    Dota2 = new dota2.Dota2Client(steamClient, steamUser, steamGameCoordinator, true),
+    MakeSha = require("./common").MakeSha,
+    tokenize = require("./common").tokenize,
+    sentrylocation = 'sentry';
+
+if (fs.existsSync(sentrylocation)) {
+    sentry = fs.readFileSync(sentrylocation);
+    sentryhash = MakeSha(sentry);
+    console.log('sentryhash', sentry.length, sentryhash);
+}
+else {
+    sentryfile = null;
+}
 
 dota2.Dota2Client.prototype.getChannelByName = function (channel) {
     return this.chatChannels.filter(function (item) {if (item.channelName == channel) return true; })
@@ -24,7 +40,7 @@ function Dota2Bot(configPath) {
     this.config = config;
     this.Dota2 = Dota2;
     this.debug = Dota2.debug;
-    this.SteamClient = SteamClient;
+    this.steamClient = steamClient;
     this.plugins = [];
     this.dotaCommandQueue = [];
     this.dotaCommandProcessInterval;
@@ -40,32 +56,59 @@ Dota2Bot.prototype.Plugins = {};
 Dota2Bot.prototype.start = function () {
     // Login, only passing authCode if it exists
     var logOnDetails = {
-        "accountName": this.config.steam_user,
+        "account_name": this.config.steam_user,
         "password": this.config.steam_pass,
     };
-    if (this.config.steam_guard_code) logOnDetails.authCode = this.config.steam_guard_code;
-    var sentry = fs.readFileSync('sentry');
-    if (sentry.length) logOnDetails.shaSentryfile = sentry;
-    this.SteamClient.on("loggedOn", this.onSteamLogOn.bind(this))
+    console.log('auth_code', this.config.steam_guard_code);
+    //sentry = fs.readFileSync('sentry');
+    console.log('sentry', sentry);
+    //console.log('sentry', MakeSha(sentry));
+    if (sentry.length) {
+        logOnDetails.sha_sentryfile = MakeSha(sentry);
+    }
+    else {
+        logOnDetails.auth_code = this.config.steam_guard_code;
+    }
+    console.log('logOnDetails', logOnDetails);
+    this.steamClient.on("logOnResponse", this.onSteamLogOn.bind(this))
         .on('sentry', this.onSteamSentry.bind(this))
         .on('servers', this.onSteamServers.bind(this))
-        .on('webSessionID', this.onWebSessionID.bind(this));
-    this.SteamClient.logOn(logOnDetails);
+    
+    this.steamClient.connect();
+    this.steamClient.on('connected', function () {
+        steamUser.logOn(logOnDetails);
+    });
+    steamUser.on('updateMachineAuth', function (response, callback){
+        console.log('updateMachineAuth');
+        fs.writeFileSync('sentry', response.bytes);
+        callback({ sha_file: MakeSha(response.bytes) });
+    });
 }
 
 /* Steam logic */
-Dota2Bot.prototype.onSteamLogOn = function onSteamLogOn(){
-    this.SteamClient.setPersonaState(steam.EPersonaState.Online); // to display your bot's status as "Online"
-    this.SteamClient.setPersonaName(this.config.steam_name); // to change its nickname
-    util.log("Logged on.");
+Dota2Bot.prototype.onSteamLogOn = function onSteamLogOn (logonResp){
+    if (logonResp.eresult == Steam.EResult.OK) {
+        console.log('Logged in.');
+        
+        steamFriends.setPersonaState(Steam.EPersonaState.Online); // to display your bot's status as "Online"
+        steamFriends.setPersonaName(this.config.steam_name); // to change its nickname
+        util.log("Logged on.");
 
-    this.Dota2.on("ready", this.onDotaReady.bind(this));
-    this.Dota2.on("unready", this.onDotaUnready.bind(this));
-    this.Dota2.on("chatMessage", this.onDotaChatMessage.bind(this));
-    this.Dota2.on("chatJoined", this.onDotaChatJoined.bind(this));
-    this.Dota2.on("chatSendMessage", this.onDotaChatSendMessage.bind(this));
-    this.Dota2.on("unhandled", this.onUnhandledMessage.bind(this));
-    this.Dota2.launch();
+        this.Dota2.on("ready", this.onDotaReady.bind(this));
+        this.Dota2.on("unready", this.onDotaUnready.bind(this));
+        this.Dota2.on("chatMessage", this.onDotaChatMessage.bind(this));
+        this.Dota2.on("chatJoined", this.onDotaChatJoined.bind(this));
+        this.Dota2.on("chatSendMessage", this.onDotaChatSendMessage.bind(this));
+        this.Dota2.on("unhandled", this.onUnhandledMessage.bind(this));
+        this.Dota2.launch();
+    
+    }
+    else {
+       steamClient.disconnect();  //# <=== Added
+       console.log(logonResp.eresult);
+    }
+
+
 }
 Dota2Bot.prototype.onSteamSentry = function onSteamSentry(sentry) {
     util.log("Received sentry.");
@@ -74,16 +117,6 @@ Dota2Bot.prototype.onSteamSentry = function onSteamSentry(sentry) {
 Dota2Bot.prototype.onSteamServers = function onSteamServers(servers) {
     util.log("Received servers.");
     fs.writeFile('servers', JSON.stringify(servers));
-}
-Dota2Bot.prototype.onWebSessionID = function onWebSessionID(webSessionID) {
-    util.log("Received web session id.");
-    // steamTrade.sessionID = webSessionID;
-    this.SteamClient.webLogOn(function onWebLogonSetTradeCookies(cookies) {
-        util.log("Received cookies.");
-        /*for (var i = 0; i < cookies.length; i++) {
-            // steamTrade.setCookie(cookies[i]);
-        }*/
-    });
 }
 
 /* Event handlers */
@@ -153,7 +186,7 @@ Dota2Bot.prototype.reloadConfig = function (configPath, configVar, callback) {
     try {
         var newConfig = JSON.parse(fs.readFileSync(configPath));
         for (var attrname in newConfig) { configVar[attrname] = newConfig[attrname]; }
-        console.log('Config reloaded', newConfig);
+        //console.log('Config reloaded', newConfig);
         if (callback) callback(true);
     }
     catch (err) {

@@ -8,9 +8,9 @@ var Dota2Bot = require("./bot").Dota2Bot,
 var bot = new Dota2Bot('./config.json');
 bot.addPlugin('general', {});
 bot.addPlugin('admin', {
-    channel: 'admin channel'
+    channel: 'devilesk'
 });
-bot.addPlugin('trivia', './triviaconfig.json');
+/*bot.addPlugin('trivia', './triviaconfig.json');
 bot.addPlugin('chatlog', {
     "databaseAddress": "mongodb://localhost/",
     "databaseName": "statsDb",
@@ -21,6 +21,7 @@ bot.addPlugin('chatlog', {
         "max": 100
     }
 });
+*/
 //bot.addPlugin('trivia', './triviaconfig2.json');
 //bot.on("ready", test);
 bot.start();

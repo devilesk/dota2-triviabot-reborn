@@ -1,3 +1,5 @@
+var crypto = require('crypto');
+
 function tokenize(msg) {
     var re = /[^\s"]+|"([^"]*)"/gi,
         args = [];
@@ -14,4 +16,11 @@ function tokenize(msg) {
     return args;
 }
 
+function MakeSha(bytes) {
+    var hash = crypto.createHash('sha1');
+    hash.update(bytes);
+    return hash.digest();
+}
+
+exports.MakeSha = MakeSha;
 exports.tokenize = tokenize;

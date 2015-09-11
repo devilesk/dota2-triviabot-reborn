@@ -2,25 +2,71 @@
 
 This is an updated dota 2 trivia bot based on a [node-dota2](https://github.com/RJacksonm1/node-dota2) and [node-steam](https://github.com/seishun/node-steam).
 
-It uses an old version of node-steam (v0.6.8) for now, the latest version is a big rework I haven't upgraded to yet.
-
-To get node-dota2 working for newer versions of nodejs I replaced the protobuf library it uses. chrisdew/protobuf replaced with dcodeIO/Protobuf.js.
-[Based on the same switch node-steam made in an earlier version](https://github.com/seishun/node-steam/commit/bb697707d968adce2cda85e8a70760b767ad7286).
-
-This modified node-dota2 only implements the handlers I needed for this bot which are the cache and chat handlers.
-I was going to clean things up and submit a pull request, but it seems like [better work is already being done](https://github.com/RJacksonm1/node-dota2/pull/90). I'll keep an eye on that and hopefully I can switch to using that.
-
 ## Installation
 
-Run `npm install` in node-dota2 directory
+Run `npm install`
 
-Since this project pulls node-steam from git as a dependency, there's an extra installing from git instruction for node-steam that should be followed.
-[See node-steam README Installation section](https://github.com/seishun/node-steam/tree/d92b12e0aa63cde3fa5433a93eafefb752f875cf)
-The extra step is to just run `npm install` in node-dota2/node_modules/steam directory.
-I actually had to use `npm install --unsafe-perm` although I think that is just something to do with my npm installation.
+Create a blank file named 'sentry'
 
-Run `npm install` in node-dota2/bot directory
+## Configuration
 
-## Configuration and running the bot
+### core bot config
 
-See README in node-dota2/bot directory.
+config_example.json is the bot's basic settings file where you'll need to specify the login info the bot will use. By default index.js will look for a file named config.json, so rename or copy config_example.json.
+
+test_mode: whether to run in test mode. In test mode steam and dota 2 connection is stubbed out.
+
+ownerId: Dota 2 friend ID of owner (lower 32-bits of steam64 ID). Used by bot to identify owner.
+
+ownerId64: Owner's steam64 ID.
+
+cmdChar: Prefix character used to indicate a command.
+
+**TODO:** description of the rest of the options.
+
+## trivia config
+
+By default index.js specifies triviaconfig.json as the config file for the trivia plugin. triviaconfig_example.json is a template showing all the options.
+
+**TODO:** description of options.
+
+### index.js
+
+This is the main application file that initializes the bot, adds the plugins the bot will use, and starts the bot.
+
+## Plugins
+
+**under construction**
+
+For this new version I tried to make the bot more easily extensible and separated bot functionality using a plugin design.
+The core bot logic is in bot.js.
+It loads the plugins the bot is configured to use. The implementation for specific commands is in plugins.
+It contains the a queue that holds actions requested by all the plugins.
+The queue is processed by an interval timer on a delay.
+
+For example, when the trivia plugin generates a message for the bot to say in chat, it will call the bot's sendMessage function in bot.js.
+The sendMessage function doesn't send the message immediately, instead it adds it to the dota command queue which is processed by an interval loop in bot.js.
+This prevents the bot from spamming too many messages too quickly.
+Other actions like joining and leaving channels are also queued.
+
+There is also a separate user command queue to separate user generated bot actions from plugin generated bot actions.
+This is so the bot can have tighter control over how often user commands are processed.
+User commands can be throttled more strictly without affecting the processing of plugin actions.
+
+Bot.js also handles chat messages by listening to node-dota2's chatMessage event. 
+Bot.js then emits its own chatMessage event which plugins are registered to listen to if they want to handle chat messages.
+Basically plugins are structured to handle events emitted from the bot.
+
+**TODO:** rewrite this
+
+Everything related to trivia is in the plugins/trivia directory.
+
+## Running the bot
+
+First create the config.json file.
+Then check index.js to see that it will initialize the bot with the plugins you want and that the individual plugin configs are correct.
+Make sure sentry file exists. If it doesn't, just create a blank file named 'sentry'.
+Run `nodejs index.js` to start the bot.
+The first time the bot runs it should fail with error code 63 and send a steam guard code to the email of the steam account the bot is using.
+Check your email for the steam guard code and update config.json with it.
+Run the bot again and it should work.

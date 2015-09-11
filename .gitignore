@@ -1,9 +1,9 @@
-node-dota2/node_modules/
-node-dota2/bot/node_modules/
-node-dota2/bot/data/all
-node-dota2/bot/data/wordlist
-node-dota2/bot/sentry
-node-dota2/bot/config.json
-node-dota2/bot/triviaconfig.json
-node-dota2/bot/triviaconfig2.json
+node-dota2/
+bot/node_modules/
+bot/data/all
+bot/data/wordlist
+bot/sentry
+bot/config.json
+bot/triviaconfig.json
+bot/triviaconfig2.json
 node-dota2-old/

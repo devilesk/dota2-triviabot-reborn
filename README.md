@@ -2,13 +2,9 @@
 
 This is an updated dota 2 trivia bot using [node-dota2](https://github.com/RJacksonm1/node-dota2) and [node-steam](https://github.com/seishun/node-steam).
 
-Crazy-Duck's fork of node-dota2 is currently used as a dependency, which updates node-dota2 to use node-steam 1.1.0.
-
 ## Installation
 
 Run `npm install` in bot directory.
-
-Create a blank file named 'sentry' in bot directory.
 
 ## Configuration
 

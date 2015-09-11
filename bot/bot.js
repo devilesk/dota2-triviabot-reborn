@@ -24,7 +24,7 @@ if (fs.existsSync(sentrylocation)) {
     console.log('sentryhash', sentry.length, sentryhash);
 }
 else {
-    sentryfile = null;
+    sentry = null;
 }
 
 dota2.Dota2Client.prototype.getChannelByName = function (channel) {
@@ -63,12 +63,18 @@ Dota2Bot.prototype.start = function () {
     //sentry = fs.readFileSync('sentry');
     console.log('sentry', sentry);
     //console.log('sentry', MakeSha(sentry));
-    if (sentry.length) {
-        logOnDetails.sha_sentryfile = MakeSha(sentry);
+    if (sentry != null) {
+        if (sentry.length) {
+            logOnDetails.sha_sentryfile = MakeSha(sentry);
+        }
+        else {
+            logOnDetails.auth_code = this.config.steam_guard_code;
+        }
     }
     else {
-        logOnDetails.auth_code = this.config.steam_guard_code;
+        if (this.config.steam_guard_code) logOnDetails.auth_code = this.config.steam_guard_code;
     }
+
     console.log('logOnDetails', logOnDetails);
     this.steamClient.on("logOnResponse", this.onSteamLogOn.bind(this))
         .on('sentry', this.onSteamSentry.bind(this))

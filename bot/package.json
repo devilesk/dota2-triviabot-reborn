@@ -10,7 +10,7 @@
   "dependencies": {
     "mongodb": "*",
     "steam": "1.1.0",
-    "dota2": "git://github.com/Crazy-Duck/node-dota2.git"
+    "dota2": "git://github.com/RJacksonm1/node-dota2.git#node-steam1.1.0"
   },
   "private": true,  
   "license": "MIT"

@@ -1,3 +1,7 @@
+# THIS REPO IS DEPRECATED
+
+[dota-trivia-bot](https://github.com/devilesk/dota-trivia-bot) is the currently maintained version.
+
 # Dota 2 Trivia Bot for Reborn
 
 This is an updated dota 2 trivia bot using [node-dota2](https://github.com/RJacksonm1/node-dota2) and [node-steam](https://github.com/seishun/node-steam).
